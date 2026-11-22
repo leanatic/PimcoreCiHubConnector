@@ -88,7 +88,11 @@ final readonly class IndexManager
     public function deleteAllIndices(string $endpointName): void
     {
         $endpointIndices = sprintf('%s__%s*', $this->indexNamePrefix, $endpointName);
-        $this->indexPersistenceService->deleteIndex($endpointIndices);
+
+        // Elasticsearch 8 refuses wildcards on delete (action.destructive_requires_name): delete by name
+        foreach ($this->indexPersistenceService->getIndexNames($endpointIndices) as $indexName) {
+            $this->indexPersistenceService->deleteIndex($indexName);
+        }
     }
 
     /**

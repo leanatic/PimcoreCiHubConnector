@@ -54,7 +54,10 @@ final class AssetMapping extends DefaultMapping
 
             'metaData' => [
                 'type' => 'object',
-                'dynamic' => true
+                'dynamic' => true,
+                // Metadata keys contain dots ("keywords" and "keywords.keywords"): keep them as flat fields, otherwise
+                // Elasticsearch reads them as nested objects and refuses the asset (Elasticsearch 8.3+)
+                'subobjects' => false,
             ],
         ];
 

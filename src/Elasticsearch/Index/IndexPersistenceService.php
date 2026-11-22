@@ -146,6 +146,22 @@ final readonly class IndexPersistenceService
     }
 
     /**
+     * Names of the indices matching a pattern (wildcards are allowed for reading, Elasticsearch 8 refuses them on delete)
+     *
+     * @return string[]
+     */
+    public function getIndexNames(string $pattern): array
+    {
+        $params = [
+            'index' => $pattern,
+            'allow_no_indices' => true,
+            'ignore_unavailable' => true,
+        ];
+
+        return array_keys($this->client->indices()->get($params)->asArray());
+    }
+
+    /**
      * Deletes an existing index.
      *
      * @param string $name – A comma-separated list of indices to delete;

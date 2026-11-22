@@ -99,7 +99,8 @@ trait HasDataObjectProvider
             'parentId' => $object->getParentId(),
             'type' => 'object',
             'subtype' => $object->getType(),
-            'className' => $object->getClassName(),
+            // Folders have no class; Pimcore 2026 no longer answers getClassName() on them
+            'className' => $object instanceof Concrete ? $object->getClassName() : null,
             'hasChildren' => $object->hasChildren(),
             'creationDate' => $object->getCreationDate(),
             'modificationDate' => $object->getModificationDate(),

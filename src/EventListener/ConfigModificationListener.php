@@ -19,10 +19,15 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Model\Event\ConfigurationEvent;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\SimpleRESTAdapterEvents;
 use Doctrine\DBAL\Exception;
+use Pimcore\Bundle\DataHubBundle\Configuration;
+use Pimcore\Bundle\DataHubBundle\Event\ConfigurationEvents;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final readonly class ConfigModificationListener implements EventSubscriberInterface
 {
+    private const CONFIG_TYPE = 'ciHub';
+
     public function __construct(
         private IndexManager $indexManager,
         private EndpointAndIndexesConfigurator $endpointAndIndexesConfigurator
@@ -34,6 +39,10 @@ final readonly class ConfigModificationListener implements EventSubscriberInterf
         return [
             SimpleRESTAdapterEvents::CONFIGURATION_PRE_DELETE => 'onPreDelete',
             SimpleRESTAdapterEvents::CONFIGURATION_POST_SAVE => 'onPostSave',
+            // The events above were dispatched by the Classic Admin configuration screen, which Pimcore 2026 removed.
+            // DataHub dispatches these for every saved or deleted configuration (Studio, API, code).
+            ConfigurationEvents::CONFIGURATION_POST_SAVE => 'onDataHubPostSave',
+            ConfigurationEvents::CONFIGURATION_POST_DELETE => 'onDataHubPostDelete',
         ];
     }
 
@@ -53,5 +62,38 @@ final readonly class ConfigModificationListener implements EventSubscriberInterf
         $configReader = new ConfigReader($configurationEvent->getConfiguration());
 
         $this->endpointAndIndexesConfigurator->createOrUpdate($configReader);
+    }
+
+    /**
+     * @throws \RuntimeException
+     * @throws ESClientException
+     * @throws Exception
+     */
+    public function onDataHubPostSave(GenericEvent $genericEvent): void
+    {
+        $configReader = $this->getCiHubConfigReader($genericEvent);
+        if ($configReader instanceof ConfigReader) {
+            $this->endpointAndIndexesConfigurator->createOrUpdate($configReader);
+        }
+    }
+
+    public function onDataHubPostDelete(GenericEvent $genericEvent): void
+    {
+        $configReader = $this->getCiHubConfigReader($genericEvent);
+        if ($configReader instanceof ConfigReader) {
+            $this->indexManager->deleteAllIndices($configReader->getName());
+        }
+    }
+
+    private function getCiHubConfigReader(GenericEvent $genericEvent): ?ConfigReader
+    {
+        $configuration = $genericEvent->getSubject();
+        if (!$configuration instanceof Configuration || self::CONFIG_TYPE !== $configuration->getType()) {
+            return null;
+        }
+
+        $config = $configuration->getConfiguration();
+
+        return \is_array($config) ? new ConfigReader($config) : null;
     }
 }
