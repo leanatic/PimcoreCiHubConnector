@@ -16,7 +16,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 
 final class AssetMapping extends DefaultMapping
 {
-    public function extractMapping(ConfigReader $config = null): array
+    public function extractMapping(?ConfigReader $config = null): array
     {
         $systemDataMapping = $this->createSystemAttributesMapping();
         $systemDataMapping['properties']['checksum'] = ['type' => 'keyword'];
@@ -89,7 +89,7 @@ final class AssetMapping extends DefaultMapping
         return $data;
     }
 
-    public function generate(ConfigReader $config = null): array
+    public function generate(?ConfigReader $config = null): array
     {
         $mappingProperties = $this->extractMapping($config);
         $mappings = $this->mappingTemplate;

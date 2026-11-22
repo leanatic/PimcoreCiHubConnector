@@ -16,8 +16,8 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Provider\Traits;
 
 use CIHub\Bundle\SimpleRESTAdapterBundle\DataCollector\CompositeDataCollector;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
+use CIHub\Bundle\SimpleRESTAdapterBundle\Services\ObjectFieldValueResolver;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Traits\LockedTrait;
-use Pimcore\Localization\LocaleService;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\AbstractObject;
 use Pimcore\Model\DataObject\Concrete;
@@ -58,15 +58,8 @@ trait HasDataObjectProvider
     {
         $objectSchema = $configReader->extractObjectSchema($concrete->getClassName());
         $gridConfigData = $this->getGridConfigData($objectSchema);
-        $data = DataObject\Service::getCsvDataForObject(
-            $concrete,
-            $gridConfigData['language'],
-            $gridConfigData['fields'],
-            $gridConfigData['helperDefinitions'],
-            new LocaleService(),
-            'title',
-            false
-        );
+        // Pimcore 2026 removed DataObject\Service::getCsvDataForObject() with the Classic Admin
+        $data = ObjectFieldValueResolver::resolve($concrete, $gridConfigData['language'], $gridConfigData['fields']);
 
         return $this->prepareExportDataForExtraction($gridConfigData['helperDefinitions'], $data);
     }

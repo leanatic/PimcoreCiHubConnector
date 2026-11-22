@@ -33,17 +33,16 @@
   "prefer-stable": true,
   "minimum-stability": "stable",
   "require": {
-    "php": "^8.2 || ^8.3 || ^8.4",
+    "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
     "elasticsearch/elasticsearch": "^7.0 || ^8.9",
     "handcraftedinthealps/elasticsearch-dsl": "^8.0",
     "league/flysystem-bundle": "^3.2",
-    "nelmio/api-doc-bundle": "^4.12",
-    "pimcore/admin-ui-classic-bundle": "^1.4.0 || ^2.0",
-    "pimcore/data-hub": "^1.7.0 || ^2.0",
-    "pimcore/elasticsearch-client": "^1.0 || ^2.0",
+    "nelmio/api-doc-bundle": "^4.12 || ^5.0",
+    "pimcore/data-hub": "^1.7.0 || ^2.0 || ^2026.1",
+    "pimcore/elasticsearch-client": "^1.0 || ^2.0 || ^2026.1",
     "symfony/messenger": "^5.0 || ^6.0 || ^7.0",
-    "webmozart/assert": "^1.11",
-    "zircote/swagger-php": "^3.0 || ^4.7"
+    "webmozart/assert": "^1.11 || ^2.0",
+    "zircote/swagger-php": "^3.0 || ^4.7 || ^5.0"
   },
   "require-dev": {
     "codeception/codeception": "^5.0",

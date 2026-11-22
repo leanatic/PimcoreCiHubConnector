@@ -41,7 +41,7 @@ final class DeleteIndexElementMessageHandler implements BatchHandlerInterface
      * @throws MissingParameterException
      * @throws ServerResponseException
      */
-    public function __invoke(DeleteIndexElementMessage $message, Acknowledger $ack = null)
+    public function __invoke(DeleteIndexElementMessage $message, ?Acknowledger $ack = null)
     {
         $this->logger->debug(sprintf(
             'CIHub integration requested to remove %s element: %d',

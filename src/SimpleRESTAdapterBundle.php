@@ -15,15 +15,12 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\Installer\InstallerInterface;
-use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
-use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 use Pimcore\HttpKernel\Bundle\DependentBundleInterface;
 use Pimcore\HttpKernel\BundleCollection\BundleCollection;
 
-final class SimpleRESTAdapterBundle extends AbstractPimcoreBundle implements DependentBundleInterface, PimcoreBundleAdminClassicInterface
+final class SimpleRESTAdapterBundle extends AbstractPimcoreBundle implements DependentBundleInterface
 {
-    use BundleAdminClassicTrait;
     use PackageVersionTrait;
 
     public const PACKAGE_NAME = 'bo-hub/ci-hub-api-bundle';
@@ -31,24 +28,6 @@ final class SimpleRESTAdapterBundle extends AbstractPimcoreBundle implements Dep
     public function getInstaller(): ?InstallerInterface
     {
         return $this->container->get(Installer::class);
-    }
-
-    public function getCssPaths(): array
-    {
-        return [
-            '/bundles/simplerestadapter/pimcore/css/icons.css',
-        ];
-    }
-
-    public function getJsPaths(): array
-    {
-        return [
-            '/bundles/simplerestadapter/pimcore/js/adapter.js',
-            '/bundles/simplerestadapter/pimcore/js/config-item.js',
-            '/bundles/simplerestadapter/pimcore/js/grid-config-dialog.js',
-            '/bundles/simplerestadapter/pimcore/js/userTab.js',
-            '/bundles/simplerestadapter/pimcore/js/user/ciHub.js',
-        ];
     }
 
     protected function getComposerPackageName(): string

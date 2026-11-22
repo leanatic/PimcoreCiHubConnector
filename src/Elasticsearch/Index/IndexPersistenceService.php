@@ -199,7 +199,7 @@ final readonly class IndexPersistenceService
      * @throws ClientResponseException
      * @throws ServerResponseException
      */
-    public function getAlias(string $aliasName = null, string $indexName = null): array
+    public function getAlias(?string $aliasName = null, ?string $indexName = null): array
     {
         $params = [];
 
