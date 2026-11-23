@@ -168,11 +168,9 @@ final readonly class IndexManager
 
         if ($value instanceof ElementInterface) {
             if ($value instanceof Asset\Unknown) {
-                if(str_starts_with((string) $value->getPath(), '/') && str_ends_with((string) $value->getPath(), "/")) {
-                    $indexName = self::INDEX_ASSET_FOLDER;
-                } else {
-                    $indexName = self::INDEX_ASSET;
-                }
+                // A folder only ends up as "unknown" when its type got lost. getPath() is the parent's path and always
+                // ends with "/", so it put every file of an unknown type (CAD files, …) into the folder index.
+                $indexName = 'folder' === $value->getType() ? self::INDEX_ASSET_FOLDER : self::INDEX_ASSET;
             } elseif ($value instanceof Folder) {
                 $indexName = self::INDEX_ASSET_FOLDER;
             } elseif ($value instanceof Asset) {

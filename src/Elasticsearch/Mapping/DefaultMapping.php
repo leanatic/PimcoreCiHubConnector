@@ -18,6 +18,13 @@ abstract class DefaultMapping implements MappingInterface
     public const INTERNAL_CHECKSUM = '__internal_checksum';
     public const INTERNAL_ORIGINAL_FULL_PATH = '__internal_original_full_path';
 
+    /**
+     * The words of an asset's metadata for the fulltext search. "metaData" is a flat_object, which only matches whole
+     * values. The field is left out of the API responses. Its name must not start with "_": a search over all fields
+     * skips those.
+     */
+    public const INTERNAL_FULLTEXT = 'metaDataFulltext';
+
     protected array $mappingTemplate =  [
         'dynamic_templates' => [
             [

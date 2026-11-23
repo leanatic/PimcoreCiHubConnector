@@ -58,6 +58,12 @@ final class AssetMapping extends DefaultMapping
                 // are. Its values are matched as a whole (filters, "metaData.Default.PLU"), not word by word.
                 'type' => 'flat_object',
             ],
+
+            self::INTERNAL_FULLTEXT => [
+                'type' => 'text',
+                'analyzer' => 'datahub_ngram_analyzer',
+                'search_analyzer' => 'datahub_whitespace_analyzer',
+            ],
         ];
 
         $thumbnails = [

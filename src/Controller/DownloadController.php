@@ -252,7 +252,7 @@ class DownloadController extends BaseEndpointController
             }, Response::HTTP_OK, [
                 'Content-Type' => $element->getMimetype(),
                 'Content-Length' => $element->getFileSize(),
-                'Disposition' => HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename, $filenameFallback),
+                'Content-Disposition' => HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename, $filenameFallback),
             ]);
 
             return $response;

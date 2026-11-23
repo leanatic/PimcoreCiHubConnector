@@ -12,6 +12,7 @@
 
 namespace CIHub\Bundle\SimpleRESTAdapterBundle\Controller;
 
+use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Mapping\DefaultMapping;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Exception\ConfigurationNotFoundException;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Exception\InvalidParameterException;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Extractor\LabelExtractorInterface;
@@ -267,7 +268,7 @@ abstract class BaseEndpointController extends FrontendController
                     $hitIndices[] = $hit['_index'];
                 }
 
-                $items[] = $hit['_source'];
+                $items[] = array_diff_key($hit['_source'], [DefaultMapping::INTERNAL_FULLTEXT => true]);
             }
 
             $response = [
@@ -303,7 +304,7 @@ abstract class BaseEndpointController extends FrontendController
                 $response['labels'] = $configReader->filterLabelSettings($labels);
             }
         } elseif (isset($result['_index'], $result['_source'])) {
-            $response = $result['_source'];
+            $response = array_diff_key($result['_source'], [DefaultMapping::INTERNAL_FULLTEXT => true]);
 
             // Labels
             $labels = $this->labelExtractor->extractLabels([$result['_index']]);

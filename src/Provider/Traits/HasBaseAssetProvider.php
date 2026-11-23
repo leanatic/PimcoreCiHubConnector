@@ -262,17 +262,25 @@ trait HasBaseAssetProvider
     }
 
     /**
+     * The checksum of the file, so clients notice when it changes: the one Pimcore stores with the asset (the storage's
+     * checksum, md5 for local storage). Folders have no file and use their modification date, as Simple REST does.
+     * The former md5 of the asset ID never changed with the file.
+     *
      * @throws \Exception
      */
     public function getChecksum(Asset $asset, string $type = 'md5'): ?string
     {
-        if ('md5' === $type) {
-            return md5((string)$asset->getId());
-        } elseif ('sha1' === $type) {
-            return sha1((string)$asset->getId());
-        } else {
+        if ('md5' !== $type) {
             return null;
         }
+
+        if ($asset instanceof Asset\Folder) {
+            return (string) $asset->getModificationDate();
+        }
+
+        $checksum = $asset->getChecksum();
+
+        return '' !== $checksum ? $checksum : null;
     }
 
     /**

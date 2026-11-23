@@ -641,7 +641,7 @@ final class SearchController extends BaseEndpointController
         $result['items'] ??= [];
         $headers = [];
         if (count($result['items']) == $this->request->get('size', 50)) {
-            $headers['link'] = $this->generateUrl('datahub_rest_endpoints_search', $allParams) . '; rel="next"';
+            $headers['link'] = $this->generateUrl('datahub_rest_endpoints_tree_items', $allParams) . '; rel="next"';
         }
 
         return new JsonResponse($result, 200, $headers);

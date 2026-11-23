@@ -38,6 +38,15 @@ readonly class EndpointAndIndexesConfigurator
      */
     public function createOrUpdate(ConfigReader $configReader): void
     {
+        $this->createOrUpdateIndices($configReader);
+        $this->initIndex($configReader);
+    }
+
+    /**
+     * Creates the config's indices or updates their mappings, without indexing the elements.
+     */
+    public function createOrUpdateIndices(ConfigReader $configReader): void
+    {
         if ($configReader->isAssetIndexingEnabled()) {
             try {
                 $this->handleAssetIndices($configReader);
@@ -51,8 +60,6 @@ readonly class EndpointAndIndexesConfigurator
             } catch (OpenSearchException) {
             }
         }
-
-        $this->initIndex($configReader);
     }
 
     /**

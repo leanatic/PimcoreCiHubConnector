@@ -12,6 +12,7 @@
 
 namespace CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index;
 
+use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Mapping\DefaultMapping;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Provider\ProviderInterface;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationRepository;
@@ -327,7 +328,7 @@ final readonly class IndexPersistenceService
             if (!$configReader->isAssetIndexingEnabled()) {
                 return [];
             }
-            $body = $this->assetProvider->getIndexData($element, $configReader);
+            $body = $this->withMetaDataFulltext($this->assetProvider->getIndexData($element, $configReader));
         }
         else {
             throw new \InvalidArgumentException('This element type is currently not supported.');
@@ -338,6 +339,23 @@ final readonly class IndexPersistenceService
             'id' => $element->getId(),
             'body' => $body,
         ]);
+    }
+
+    /**
+     * Adds the metadata values as words for the fulltext search (see DefaultMapping::INTERNAL_FULLTEXT).
+     *
+     * @param array<string, mixed> $body
+     *
+     * @return array<string, mixed>
+     */
+    private function withMetaDataFulltext(array $body): array
+    {
+        $values = array_filter((array) ($body['metaData'] ?? []), is_scalar(...));
+        if ([] !== $values) {
+            $body[DefaultMapping::INTERNAL_FULLTEXT] = implode(' ', array_unique(array_map(strval(...), $values)));
+        }
+
+        return $body;
     }
 
     public function bulk(array $params = []) {

@@ -56,6 +56,20 @@ final readonly class AuthManager
     }
 
     /**
+     * Whether the request carries the API key of the DataHub config ("deliverySettings.apikey"), as Pimcore's Simple
+     * REST bundle authenticates. It identifies no user, so it only grants the read endpoints that answer from the index.
+     */
+    public function hasConfigApiKey(?string $apiKey): bool
+    {
+        $header = (string) $this->request->headers->get('Authorization');
+        if (null === $apiKey || '' === $apiKey || !str_starts_with($header, 'Bearer ')) {
+            return false;
+        }
+
+        return hash_equals($apiKey, mb_substr($header, 7));
+    }
+
+    /**
      * @throws Exception
      */
     private function getUserByToken(): ?User

@@ -4,6 +4,7 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Command;
 gc_enabled();
 
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index\IndexPersistenceService;
+use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\EndpointAndIndexesConfigurator;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Manager\IndexManager;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationRepository;
@@ -33,6 +34,7 @@ class RebuildIndexCommand extends Command
         private readonly IndexManager                   $indexManager,
         private readonly IndexPersistenceService        $indexPersistenceService,
         private readonly DataHubConfigurationRepository $dataHubConfigurationRepository,
+        private readonly EndpointAndIndexesConfigurator $endpointAndIndexesConfigurator,
     ) {
         parent::__construct();
     }
@@ -58,6 +60,8 @@ class RebuildIndexCommand extends Command
         if ($configuration instanceof Configuration) {
 
             $configReader = new ConfigReader($configuration->getConfiguration());
+            // Indices that are missing (new OpenSearch, deleted indices) are only created when the config is saved
+            $this->endpointAndIndexesConfigurator->createOrUpdateIndices($configReader);
             $this->cleanAliases($configReader);
 
             if ($configReader->isAssetIndexingEnabled()) {
