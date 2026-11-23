@@ -57,6 +57,13 @@ final class SimpleRESTAdapterExtension extends Extension implements PrependExten
             $this->ciHubConfig = $containerBuilder->getExtensionConfig('ci_hub_adapter');
         }
 
+        // The DataHub config type of this bundle: DataHub only imports configs of registered types (Studio)
+        if ($containerBuilder->hasExtension('pimcore_data_hub')) {
+            $containerBuilder->prependExtensionConfig('pimcore_data_hub', [
+                'supported_types' => ['ciHub' => 'CIHub\Bundle\SimpleRESTAdapterBundle'],
+            ]);
+        }
+
         $phpFileLoader = new PhpFileLoader($containerBuilder, new FileLocator(__DIR__.'/../Resources/config'));
         $phpFileLoader->load('config.php');
         if ($containerBuilder->hasExtension('doctrine_migrations')) {

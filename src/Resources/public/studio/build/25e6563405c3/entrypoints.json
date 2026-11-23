@@ -1,0 +1,24 @@
+{
+  "entrypoints": {
+    "main": {
+      "js": [
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/237.b09c4910.js",
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/main.741def06.js"
+      ],
+      "css": []
+    },
+    "ci_hub_studio_ui": {
+      "js": [
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/async/__federation_expose_default_export.03c2933c.js",
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/remoteEntry.js"
+      ],
+      "css": []
+    },
+    "exposeRemote": {
+      "js": [
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/exposeRemote.js"
+      ],
+      "css": []
+    }
+  }
+}

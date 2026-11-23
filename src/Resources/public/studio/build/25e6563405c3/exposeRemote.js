@@ -7,7 +7,7 @@
         window.alternativePluginExportPaths = {}
       }
 
-      window.pluginRemotes.ci_hub_studio_ui = "/bundles/simplerestadapter/studio/build/b9dbf381434d/static/js/remoteEntry.js"
+      window.pluginRemotes.ci_hub_studio_ui = "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/remoteEntry.js"
 
       
     

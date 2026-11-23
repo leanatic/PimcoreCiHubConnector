@@ -2,6 +2,11 @@
 Every DataHub configuration creates a separate endpoint with its own settings and its own data.
 Following configuration options are possible for each endpoint.
 
+> Pimcore 2026 (Studio): Automation & Integration > Data Hub lists the configs of type "CI HUB"; "New" > "CI HUB"
+> creates one. The editor has the tabs General, Schema, Workspaces, Access key, Labels and Permissions (the screenshots
+> below are from the Classic Admin). Non-admins need the permissions "plugin_datahub_config" and
+> "plugin_datahub_adapter_ciHub", or the config's own permissions. Saving updates the search indices.
+
 ### General
 See type and name of configuration and define description and if the endpoint is active or not.
 
@@ -15,7 +20,9 @@ be considered in tree items and search requests and if originals and/or what thu
 
 ### Workspaces
 Define workspaces for Assets and DataObjects and so manage what data should be actually exposed via the endpoint.
-It is possible to include and explicitly exclude folders.
+It is possible to include and explicitly exclude folders: the most specific folder decides, without any folder nothing
+is exposed. The Simple REST paths (`/pimcore-datahub-webservices/simplerest/{config}/…`) apply them on every request
+(`WorkspaceQuery`), the index itself holds all elements.
 
 [Workspace settings](https://pimcore.com/docs/platform/Pimcore/Administration_of_Pimcore/Users_and_Roles/#element-permissions---workspaces)
 

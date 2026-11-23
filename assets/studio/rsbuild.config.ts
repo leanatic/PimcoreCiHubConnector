@@ -66,7 +66,9 @@ export default defineConfig({
       },
       dts: false,
       remotes: {
-        '@pimcore/studio-ui-bundle': createDynamicRemote('pimcore_studio_ui_bundle')
+        '@pimcore/studio-ui-bundle': createDynamicRemote('pimcore_studio_ui_bundle'),
+        // DataHub's Studio SDK (config editor of the "ciHub" adapter), loaded from the installed DataHub bundle
+        '@pimcore/data-hub': createDynamicRemote('pimcore_datahub_bundle')
       },
       shared: {
         ...packages.dependencies,

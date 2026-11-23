@@ -1,0 +1,37 @@
+{
+  "allFiles": [
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/main.741def06.js",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/remoteEntry.js",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/async/__federation_expose_default_export.03c2933c.js",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/237.b09c4910.js",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/mf-stats.json",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/mf-manifest.json",
+    "/bundles/simplerestadapter/studio/build/25e6563405c3/main.html"
+  ],
+  "entries": {
+    "main": {
+      "html": [
+        "/bundles/simplerestadapter/studio/build/25e6563405c3/main.html"
+      ],
+      "initial": {
+        "js": [
+          "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/237.b09c4910.js",
+          "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/main.741def06.js"
+        ]
+      }
+    },
+    "ci_hub_studio_ui": {
+      "initial": {
+        "js": [
+          "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/remoteEntry.js"
+        ]
+      },
+      "async": {
+        "js": [
+          "/bundles/simplerestadapter/studio/build/25e6563405c3/static/js/async/__federation_expose_default_export.03c2933c.js"
+        ]
+      }
+    }
+  },
+  "integrity": {}
+}

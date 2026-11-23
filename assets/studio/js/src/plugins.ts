@@ -1,4 +1,5 @@
 import { type IAbstractPlugin } from '@pimcore/studio-ui-bundle'
+import { ConfigModule } from './modules/config-module'
 import { TokenModule } from './modules/token-module'
 
 /**
@@ -10,5 +11,6 @@ export const CiHubPlugin: IAbstractPlugin = {
 
   onStartup ({ moduleSystem }) {
     moduleSystem.registerModule(TokenModule)
+    moduleSystem.registerModule(ConfigModule)
   }
 }

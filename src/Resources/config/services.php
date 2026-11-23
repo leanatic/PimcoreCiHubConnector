@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use CIHub\Bundle\SimpleRESTAdapterBundle\Command\RebuildIndexCommand;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Installer;
+use CIHub\Bundle\SimpleRESTAdapterBundle\Services\ClassFieldProvider;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Webpack\WebpackEntryPointProvider;
 use Pimcore\Bundle\StudioUiBundle\Webpack\WebpackEntryPointProviderInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -33,6 +34,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->load('CIHub\Bundle\SimpleRESTAdapterBundle\Command\\', __DIR__.'/../../Command')
         ->tag('console.command');
+
+    $services->set(ClassFieldProvider::class);
 
     $services->set(Installer::class)
         ->public()

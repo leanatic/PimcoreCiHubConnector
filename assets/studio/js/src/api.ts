@@ -10,16 +10,22 @@ export interface CiHubResponse {
 }
 
 /**
- * Calls /pimcore-studio/api/ci-hub/<path>; Studio's session cookie authenticates the request. Rejects with the answer's
- * message when the request fails or the answer says `success: false`.
+ * Calls /pimcore-studio/api/ci-hub/<path>, with a JSON body if given; Studio's session cookie authenticates the
+ * request. Rejects with the answer's message when the request fails or the answer says `success: false`.
  */
 export const callCiHubApi = async <T extends CiHubResponse = CiHubResponse>(
-  method: 'GET' | 'POST' | 'DELETE',
-  path: string
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  path: string,
+  body?: unknown
 ): Promise<T> => {
   const prefix = (appConfig?.apiPrefix ?? '/pimcore-studio/api').replace(/\/$/, '')
 
-  const response = await fetch(`${prefix}/ci-hub${path}`, { method, credentials: 'same-origin' })
+  const response = await fetch(`${prefix}/ci-hub${path}`, {
+    method,
+    credentials: 'same-origin',
+    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body)
+  })
 
   let payload = {} as T
   try {
