@@ -125,7 +125,7 @@ abstract class DefaultMapping implements MappingInterface
                     'type' => 'long',
                 ],
                 'type' => [
-                    'type' => 'constant_keyword',
+                    'type' => 'keyword', // constant_keyword needs a fixed value in OpenSearch
                 ],
                 'binaryData' => [
                     'dynamic' => 'false',

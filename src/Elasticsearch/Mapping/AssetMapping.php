@@ -53,11 +53,10 @@ final class AssetMapping extends DefaultMapping
             ],
 
             'metaData' => [
-                'type' => 'object',
-                'dynamic' => true,
-                // Metadata keys contain dots ("keywords" and "keywords.keywords"): keep them as flat fields, otherwise
-                // Elasticsearch reads them as nested objects and refuses the asset (Elasticsearch 8.3+)
-                'subobjects' => false,
+                // Metadata keys contain dots ("keywords" and "keywords.keywords"). As dynamic object fields OpenSearch
+                // reads them as nested objects and refuses the asset; flat_object (OpenSearch 2.7+) keeps them as they
+                // are. Its values are matched as a whole (filters, "metaData.Default.PLU"), not word by word.
+                'type' => 'flat_object',
             ],
         ];
 

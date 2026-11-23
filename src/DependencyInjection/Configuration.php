@@ -46,8 +46,8 @@ final class Configuration implements ConfigurationInterface
             ->info('Class that defines the transformer for the filter parameter. Used in search and tree-items endpoint.')
             ->defaultValue(FilterFieldNameTransformer::class)
             ->end()
-            ->scalarNode('es_client_name')
-            ->info('Name of elasticsearch client configuration to be used.')
+            ->scalarNode('opensearch_client_name')
+            ->info('Name of the OpenSearch client configuration (pimcore_open_search_client.clients) to be used.')
             ->defaultValue('default')
             ->end()
             ->scalarNode('max_result')
@@ -55,7 +55,7 @@ final class Configuration implements ConfigurationInterface
             ->defaultValue(100)
             ->end()
             ->variableNode('index_settings')
-            ->info('Global Elasticsearch index settings.')
+            ->info('Global OpenSearch index settings.')
             ->defaultValue([
                 'number_of_shards' => 5,
                 'number_of_replicas' => 0,

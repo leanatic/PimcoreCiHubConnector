@@ -12,10 +12,8 @@
 
 namespace CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index;
 
-use Elastic\Elasticsearch\Client;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Client;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use ONGR\ElasticsearchDSL\Search;
 
 final readonly class IndexQueryService
@@ -32,9 +30,7 @@ final readonly class IndexQueryService
     /**
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function get(int $id, string $index): array
     {
@@ -43,14 +39,13 @@ final readonly class IndexQueryService
             'index' => $index,
         ];
 
-        return $this->client->get($params)->asArray();
+        return $this->client->get($params);
     }
 
     /**
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      * @throws \Exception
      */
     public function search(string $index, array $query, array $params = []): array
@@ -70,6 +65,6 @@ final readonly class IndexQueryService
             $requestParams = array_merge($requestParams, $params);
         }
 
-        return $this->client->search($requestParams)->asArray();
+        return $this->client->search($requestParams);
     }
 }

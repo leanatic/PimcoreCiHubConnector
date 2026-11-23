@@ -117,9 +117,7 @@ final readonly class RebuildIndexElementMessageHandler
     }
 
     /**
-     * @throws \Elastic\Elasticsearch\Exception\ClientResponseException
-     * @throws \Elastic\Elasticsearch\Exception\MissingParameterException
-     * @throws \Elastic\Elasticsearch\Exception\ServerResponseException
+     * @throws \OpenSearch\Common\Exceptions\OpenSearchException
      */
     public function cleanAliases(RebuildIndexElementMessage $rebuildIndexElementMessage): void
     {

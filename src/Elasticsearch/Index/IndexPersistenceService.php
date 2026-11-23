@@ -15,10 +15,8 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Provider\ProviderInterface;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationRepository;
-use Elastic\Elasticsearch\Client;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Client;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use Pimcore\Bundle\DataHubBundle\Configuration;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
@@ -43,9 +41,7 @@ final readonly class IndexPersistenceService
      *
      * @param string $name – A comma-separated list of alias names to return
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function aliasExists(string $name): bool
     {
@@ -53,7 +49,7 @@ final readonly class IndexPersistenceService
             'name' => $name,
         ];
 
-        return $this->client->indices()->existsAlias($params)->asBool();
+        return $this->client->indices()->existsAlias($params);
     }
 
     /**
@@ -65,9 +61,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function createAlias(string $index, string $name): array
     {
@@ -76,7 +70,7 @@ final readonly class IndexPersistenceService
             'name' => $name,
         ];
 
-        return $this->client->indices()->putAlias($params)->asArray();
+        return $this->client->indices()->putAlias($params);
     }
 
     /**
@@ -87,9 +81,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      * @throws \Exception
      */
     public function createIndex(string $name, array $mapping = []): array
@@ -136,7 +128,7 @@ final readonly class IndexPersistenceService
                 'mappings' => $mapping,
                 'settings' => $indexSettings,
             ],
-        ])->asArray();
+        ]);
 
         if (!$result['acknowledged']) {
             throw new \Exception('Index creation failed. IndexName: '.$name);
@@ -146,7 +138,7 @@ final readonly class IndexPersistenceService
     }
 
     /**
-     * Names of the indices matching a pattern (wildcards are allowed for reading, Elasticsearch 8 refuses them on delete)
+     * Names of the indices matching a pattern (wildcards are allowed for reading, not on delete)
      *
      * @return string[]
      */
@@ -158,7 +150,7 @@ final readonly class IndexPersistenceService
             'ignore_unavailable' => true,
         ];
 
-        return array_keys($this->client->indices()->get($params)->asArray());
+        return array_keys($this->client->indices()->get($params));
     }
 
     /**
@@ -171,9 +163,7 @@ final readonly class IndexPersistenceService
      *
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/index-management-settings.html#action-destructive-requires-name action.destructive_requires_name
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function deleteIndex(string $name): array
     {
@@ -181,7 +171,7 @@ final readonly class IndexPersistenceService
             'index' => $name,
         ];
 
-        return $this->client->indices()->delete($params)->asArray();
+        return $this->client->indices()->delete($params);
     }
 
     /**
@@ -192,16 +182,14 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function delete(int $elementId, string $indexName): array
     {
         return $this->client->delete([
             'index' => $indexName,
             'id' => $elementId,
-        ])->asArray();
+        ]);
     }
 
     /**
@@ -212,8 +200,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function getAlias(?string $aliasName = null, ?string $indexName = null): array
     {
@@ -227,7 +214,7 @@ final readonly class IndexPersistenceService
             $params['index'] = $indexName;
         }
 
-        return $this->client->indices()->getAlias($params)->asArray();
+        return $this->client->indices()->getAlias($params);
     }
 
     /**
@@ -237,8 +224,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function getMapping(string $indexName): array
     {
@@ -246,7 +232,7 @@ final readonly class IndexPersistenceService
             'index' => $indexName,
         ];
 
-        return $this->client->indices()->getMapping($params)->asArray();
+        return $this->client->indices()->getMapping($params);
     }
 
     /**
@@ -254,9 +240,7 @@ final readonly class IndexPersistenceService
      *
      * @param string $name – A comma-separated list of index names
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
-     * @throws MissingParameterException
+     * @throws OpenSearchException
      */
     public function indexExists(string $name): bool
     {
@@ -264,7 +248,7 @@ final readonly class IndexPersistenceService
             'index' => $name,
         ];
 
-        return $this->client->indices()->exists($params)->asBool();
+        return $this->client->indices()->exists($params);
     }
 
     /**
@@ -275,8 +259,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function refreshIndex(string $name): array
     {
@@ -284,7 +267,7 @@ final readonly class IndexPersistenceService
             'index' => $name,
         ];
 
-        return $this->client->indices()->refresh($params)->asArray();
+        return $this->client->indices()->refresh($params);
     }
 
     /**
@@ -295,8 +278,7 @@ final readonly class IndexPersistenceService
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function reindex(string $source, string $dest): array
     {
@@ -311,7 +293,7 @@ final readonly class IndexPersistenceService
             ],
         ];
 
-        return $this->client->reindex($params)->asArray();
+        return $this->client->reindex($params);
     }
 
     /**
@@ -353,10 +335,9 @@ final readonly class IndexPersistenceService
 
         return $this->client->index([
             'index' => $indexName,
-            'type' => '_doc',
             'id' => $element->getId(),
             'body' => $body,
-        ])->asArray();
+        ]);
     }
 
     public function bulk(array $params = []) {

@@ -8,9 +8,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Manager\IndexManager;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationRepository;
 use Doctrine\DBAL\Exception;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use Pimcore\Bundle\DataHubBundle\Configuration;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder;
@@ -49,10 +47,8 @@ class RebuildIndexCommand extends Command
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      * @throws Exception
-     * @throws MissingParameterException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -78,9 +74,7 @@ class RebuildIndexCommand extends Command
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
-     * @throws MissingParameterException
+     * @throws OpenSearchException
      */
     public function cleanAliases(ConfigReader $configReader): void
     {

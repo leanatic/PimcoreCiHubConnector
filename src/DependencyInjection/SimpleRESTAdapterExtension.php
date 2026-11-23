@@ -30,7 +30,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationReposito
 use CIHub\Bundle\SimpleRESTAdapterBundle\Transformer\FilterFieldNameTransformer;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Transformer\FilterFieldNameTransformerInterface;
 use Nelmio\ApiDocBundle\Render\RenderOpenApi;
-use Pimcore\Bundle\ElasticsearchClientBundle\DependencyInjection\PimcoreElasticsearchClientExtension;
+use Pimcore\Bundle\OpenSearchClientBundle\DependencyInjection\PimcoreOpenSearchClientExtension;
 use Pimcore\Config;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -112,7 +112,7 @@ final class SimpleRESTAdapterExtension extends Extension implements PrependExten
         $containerBuilder->addDefinitions([AuthManager::class => $definition]);
 
         $definition = new Definition(IndexPersistenceService::class);
-        $definition->setArgument('$client', new Reference(PimcoreElasticsearchClientExtension::CLIENT_SERVICE_PREFIX.$config['es_client_name']));
+        $definition->setArgument('$client', new Reference(PimcoreOpenSearchClientExtension::CLIENT_SERVICE_PREFIX.$config['opensearch_client_name']));
         $definition->setArgument('$dataHubConfigurationRepository', new Reference(DataHubConfigurationRepository::class));
         $definition->setArgument('$assetProvider', new Reference($config['asset_provider'] ?? AssetProvider::class));
         $definition->setArgument('$dataObjectProvider', new Reference($config['data_object_provider'] ?? DataObjectProvider::class));
@@ -121,7 +121,7 @@ final class SimpleRESTAdapterExtension extends Extension implements PrependExten
         $containerBuilder->addDefinitions([IndexPersistenceService::class => $definition]);
 
         $definition = new Definition(IndexQueryService::class);
-        $definition->setArgument('$client', new Reference(PimcoreElasticsearchClientExtension::CLIENT_SERVICE_PREFIX.$config['es_client_name']));
+        $definition->setArgument('$client', new Reference(PimcoreOpenSearchClientExtension::CLIENT_SERVICE_PREFIX.$config['opensearch_client_name']));
         $definition->setArgument('$indexNamePrefix', $config['index_name_prefix']);
 
         $containerBuilder->addDefinitions([IndexQueryService::class => $definition]);

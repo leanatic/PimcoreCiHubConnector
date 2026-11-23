@@ -55,7 +55,7 @@ final class DataObjectMapping extends DefaultMapping
                         ],
                     ],
                     'type' => [
-                        'type' => 'constant_keyword',
+                        'type' => 'keyword', // constant_keyword needs a fixed value in OpenSearch
                     ],
                     'parentId' => [
                         'type' => 'keyword',

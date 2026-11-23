@@ -16,9 +16,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index\IndexPersistenceSer
 use CIHub\Bundle\SimpleRESTAdapterBundle\Exception\ESClientException;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Utils\DiffArray;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder;
 use Pimcore\Model\DataObject;
@@ -40,9 +38,7 @@ final readonly class IndexManager
     /**
      * Clears an index by cloning and renaming the existing index.
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function clearIndexData(string $indexName): void
     {
@@ -61,9 +57,7 @@ final readonly class IndexManager
      * @param string $indexName – The index to create or update
      * @param array  $mapping   – The mapping to check against
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function createOrUpdateIndex(string $indexName, array $mapping): void
     {
@@ -81,15 +75,13 @@ final readonly class IndexManager
     /**
      * Deletes all indices of a certain endpoint configuration.
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function deleteAllIndices(string $endpointName): void
     {
         $endpointIndices = sprintf('%s__%s*', $this->indexNamePrefix, $endpointName);
 
-        // Elasticsearch 8 refuses wildcards on delete (action.destructive_requires_name): delete by name
+        // The search engine may refuse wildcards on delete (action.destructive_requires_name): delete by name
         foreach ($this->indexPersistenceService->getIndexNames($endpointIndices) as $indexName) {
             $this->indexPersistenceService->deleteIndex($indexName);
         }
@@ -100,8 +92,7 @@ final readonly class IndexManager
      *
      * @param string $aliasName – The name of the alias of an index
      *
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function findIndexNameByAlias(string $aliasName): string
     {
@@ -149,9 +140,7 @@ final readonly class IndexManager
      *
      * @return array<string, mixed>
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function getIndexMapping(string $indexName): array
     {
@@ -244,9 +233,7 @@ final readonly class IndexManager
      * Creates a new target index with mappings and re-indexes the data from the source index.
      * Then a new alias pointing to the new index is created and the old index is removed.
      *
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function updateMapping(string $indexName, array $mapping, bool $reindexData = true, bool $force = false): void
     {

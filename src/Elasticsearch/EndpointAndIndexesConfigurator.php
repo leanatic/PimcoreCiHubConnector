@@ -19,9 +19,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Manager\IndexManager;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Messenger\RebuildIndexElementMessage;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Reader\ConfigReader;
 use Doctrine\DBAL\Exception;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 readonly class EndpointAndIndexesConfigurator
@@ -43,14 +41,14 @@ readonly class EndpointAndIndexesConfigurator
         if ($configReader->isAssetIndexingEnabled()) {
             try {
                 $this->handleAssetIndices($configReader);
-            } catch (ClientResponseException|MissingParameterException|ServerResponseException) {
+            } catch (OpenSearchException) {
             }
         }
 
         if ($configReader->isObjectIndexingEnabled()) {
             try {
                 $this->handleObjectIndices($configReader);
-            } catch (ClientResponseException|MissingParameterException|ServerResponseException) {
+            } catch (OpenSearchException) {
             }
         }
 
@@ -66,9 +64,7 @@ readonly class EndpointAndIndexesConfigurator
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
-     * @throws MissingParameterException
+     * @throws OpenSearchException
      */
     private function handleAssetIndices(ConfigReader $configReader): void
     {
@@ -88,9 +84,7 @@ readonly class EndpointAndIndexesConfigurator
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
-     * @throws MissingParameterException
+     * @throws OpenSearchException
      */
     private function handleObjectIndices(ConfigReader $configReader): void
     {

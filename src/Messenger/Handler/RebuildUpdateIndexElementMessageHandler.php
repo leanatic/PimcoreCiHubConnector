@@ -115,9 +115,7 @@ final readonly class RebuildUpdateIndexElementMessageHandler
     }
 
     /**
-     * @throws \Elastic\Elasticsearch\Exception\ClientResponseException
-     * @throws \Elastic\Elasticsearch\Exception\MissingParameterException
-     * @throws \Elastic\Elasticsearch\Exception\ServerResponseException
+     * @throws \OpenSearch\Common\Exceptions\OpenSearchException
      */
     public function switchNewIndexToAlias(RebuildUpdateIndexElementMessage $updateIndexElementMessage): void
     {

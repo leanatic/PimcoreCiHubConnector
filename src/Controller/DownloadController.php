@@ -26,8 +26,7 @@ use CIHub\Bundle\SimpleRESTAdapterBundle\Repository\DataHubConfigurationReposito
 use CIHub\Bundle\SimpleRESTAdapterBundle\Services\ThumbnailService;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Traits\RestHelperTrait;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Transformer\FilterFieldNameTransformerInterface;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToReadFile;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -394,8 +393,7 @@ class DownloadController extends BaseEndpointController
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     #[Route('/download-links', name: 'download_links', methods: ['GET'])]
     #[OA\Get(

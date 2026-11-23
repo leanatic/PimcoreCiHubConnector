@@ -16,6 +16,6 @@ final class ESClientException extends \RuntimeException
 {
     public function __construct(string $message)
     {
-        parent::__construct(sprintf('Elasticsearch Client Exception: %s', $message));
+        parent::__construct(sprintf('Search Client Exception: %s', $message));
     }
 }

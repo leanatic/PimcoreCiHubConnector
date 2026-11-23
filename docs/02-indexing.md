@@ -1,8 +1,8 @@
 # Indexing Details
-All data that is delivered by simple REST endpoints is indexed in Elasticsearch indices.
-Queries and data delivery takes place directly out of Elasticsearch (not from the Pimcore database).
+All data that is delivered by simple REST endpoints is indexed in OpenSearch indices.
+Queries and data delivery takes place directly out of OpenSearch (not from the Pimcore database).
 
-For each DataHub configuration separate Elasticsearch indices will be created and updated.
+For each DataHub configuration separate OpenSearch indices will be created and updated.
 
 **Indexing of data** takes places asynchronously with a Symfony Messenger queue, and the consume queue command
 `messenger:consume datahub_es_index_queue`. This command needs to be executed on a regular basis, e.g. every 5 minutes.

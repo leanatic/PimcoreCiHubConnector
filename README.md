@@ -2,7 +2,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/w/simple-rest-adapter-bundle.svg?style=flat-square)](https://packagist.org/packages/ci-hub/simple-rest-adapter-bundle)
 
 This bundle adds a REST API endpoints to [Pimcore DataHub](https://github.com/pimcore/data-hub)
-for Assets and DataObjects. All exposed data can be configured, is indexed in Elasticsearch and delivered from there
+for Assets and DataObjects. All exposed data can be configured, is indexed in OpenSearch and delivered from there
 for better query performance and scalability.
 
 Therefore, it can be used to connect Pimcore to other systems or to connect Front-End applications.
@@ -19,7 +19,7 @@ So you can choose what works best for you.
 
 ## Features in a nutshell
 * Configure a schema and expose data like with other DataHub adapters via Drag & Drop.
-* All data gets indexed in Elasticsearch indices and delivered from there (no additional load on the database
+* All data gets indexed in OpenSearch indices and delivered from there (no additional load on the database
   when accessing data via REST endpoints).
 * Endpoint documentation and test via Swagger UI.
 * Available endpoints:

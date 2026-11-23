@@ -31,7 +31,8 @@ To install the Simple REST Adapter complete following steps:
 * [Docker Setup](03-docker-setup-example.md)
 
 ## Bundle Configuration
-Configure Elasticsearch hosts and index name prefix with Symfony configuration:
+Configure the OpenSearch client and index name prefix with Symfony configuration. The OpenSearch connection itself
+is a client of `pimcore/opensearch-client` (`pimcore_open_search_client.clients`):
 
 ```yaml
 # Default configuration for "SimpleRESTAdapterBundle"
@@ -47,13 +48,10 @@ datahub_rest_adapter:
     # Default transformer for the filter parameter. Used in search and tree-items endpoint.
     filter_field_name_transformer: 'CIHub\Bundle\SimpleRESTAdapterBundle\Transformer\FilterFieldNameTransformer'
 
-    # List of Elasticsearch hosts.
-    es_hosts:
+    # Name of the OpenSearch client (pimcore_open_search_client.clients) to be used.
+    opensearch_client_name: default
 
-        # Default:
-        - localhost
-
-    # Global Elasticsearch index settings.
+    # Global OpenSearch index settings.
     index_settings:
 
         # Defaults:
@@ -79,7 +77,7 @@ datahub_rest_adapter:
                         - lowercase
             tokenizer:
                 datahub_ngram_tokenizer:
-                    type:                nGram
+                    type:                ngram
                     min_gram:            2
                     max_gram:            20
                     token_chars:
@@ -89,10 +87,7 @@ datahub_rest_adapter:
                     type:                whitespace
 ```
 
-> Supported Elasticsearch version: ^7.0
-
-**Notice:** If you are using Elasticsearch version 8.0 and above, you should
-set `datahub_rest_adapter.index_settings.analysis.tokenizer.datahub_ngram_tokenizer.type` in the above configuration as `ngram`, not `nGram`.
+> Supported OpenSearch version: ^2.7 (asset metadata is indexed as `flat_object`).
 
 To make sure the indexing queue is processed and index is filled, the following command has to be executed on
 a regular basis, e.g. every 5 minutes.

@@ -16,9 +16,7 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Messenger\Handler;
 
 use CIHub\Bundle\SimpleRESTAdapterBundle\Messenger\DeleteIndexElementMessage;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index\IndexPersistenceService;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\MissingParameterException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Handler\Acknowledger;
@@ -37,9 +35,7 @@ final class DeleteIndexElementMessageHandler implements BatchHandlerInterface
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws MissingParameterException
-     * @throws ServerResponseException
+     * @throws OpenSearchException
      */
     public function __invoke(DeleteIndexElementMessage $message, ?Acknowledger $ack = null)
     {

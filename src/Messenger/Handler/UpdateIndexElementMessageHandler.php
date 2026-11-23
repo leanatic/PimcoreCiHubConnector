@@ -17,8 +17,8 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Messenger\Handler;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Messenger\UpdateIndexElementMessage;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index\IndexPersistenceService;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Manager\IndexManager;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use OpenSearch\Common\Exceptions\OpenSearchException;
+use OpenSearch\Common\Exceptions\ServerErrorResponseException;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\AbstractObject;
@@ -68,14 +68,14 @@ final class UpdateIndexElementMessageHandler implements BatchHandlerInterface
             $indexName = $this->indexManager->getIndexName($element, $endpointName);
             try {
                 $this->indexPersistenceService->update($element, $endpointName, $indexName);
-            } catch (ClientResponseException $e) {
-                $this->logger->warning($e->getMessage(), [
+            } catch (ServerErrorResponseException $e) {
+                $this->logger->critical($e->getMessage(), [
                     'elementId' => $element->getId(),
                     'endpointName' => $endpointName,
                     'indexName' => $indexName,
                 ]);
-            } catch (ServerResponseException $e) {
-                $this->logger->critical($e->getMessage(), [
+            } catch (OpenSearchException $e) {
+                $this->logger->warning($e->getMessage(), [
                     'elementId' => $element->getId(),
                     'endpointName' => $endpointName,
                     'indexName' => $indexName,
