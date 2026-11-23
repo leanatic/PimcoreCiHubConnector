@@ -267,6 +267,10 @@ final readonly class IndexManager
                 if (!isset($reIndexResponse['failures']) || !empty($reIndexResponse['failures'])) {
                     throw new ESClientException(sprintf('Could not reindex data from "%s" to "%s"', $source, $target));
                 }
+
+                // Make the copied documents searchable before the alias points to them; otherwise the API answers
+                // without them until the next refresh (up to a second after every config save)
+                $this->indexPersistenceService->refreshIndex($target);
             }
 
             // Create the alias for the new target index

@@ -16,6 +16,7 @@ namespace CIHub\Bundle\SimpleRESTAdapterBundle\Controller;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Index\IndexQueryService;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\Mapping\DefaultMapping;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\SimpleRestQueryBuilder;
+use CIHub\Bundle\SimpleRESTAdapterBundle\Elasticsearch\WorkspaceQuery;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Exception\AccessDeniedException;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Extractor\LabelExtractorInterface;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Manager\AuthManager;
@@ -43,8 +44,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  * HUB clients set up against Simple REST.
  *
  * Parameters, filter syntax, paging and responses follow Simple REST, so these clients keep working without changes.
- * Like Simple REST, they accept the config's API key ("deliverySettings.apikey") and answer from the index, which only
- * holds the elements of the config's workspaces. A CI HUB user token is accepted as well. The other endpoints of this
+ * Like Simple REST, they accept the config's API key ("deliverySettings.apikey") and only answer with the elements of
+ * the config's workspaces (the index holds all elements, WorkspaceQuery filters them). A CI HUB user token is accepted
+ * as well. The other endpoints of this
  * bundle (upload, versions, lock …) need a user token, as they act in the name of a Pimcore user.
  *
  * The routes take priority over the "/pimcore-datahub-webservices/simplerest/{config}" aliases of the other controllers.
@@ -80,6 +82,7 @@ final class SimpleRestCompatibilityController extends FrontendController
             return $this->search($request, $configReader, $config, $indices, [
                 ['term' => ['system.type' => $type]],
                 ['term' => ['system.parentId' => $parentId]],
+                $this->getWorkspaceCondition($configReader, $type),
             ]);
         } catch (\Exception $exception) {
             return $this->sendJsonError($exception);
@@ -96,7 +99,13 @@ final class SimpleRestCompatibilityController extends FrontendController
                 $this->getIndices($configReader, $config, 'object', false)
             );
 
-            return $this->search($request, $configReader, $config, $indices);
+            return $this->search($request, $configReader, $config, $indices, [['bool' => [
+                'should' => [
+                    ['bool' => ['filter' => [['term' => ['system.type' => 'asset']], $this->getWorkspaceCondition($configReader, 'asset')]]],
+                    ['bool' => ['filter' => [['term' => ['system.type' => 'object']], $this->getWorkspaceCondition($configReader, 'object')]]],
+                ],
+                'minimum_should_match' => 1,
+            ]]]);
         } catch (\Exception $exception) {
             return $this->sendJsonError($exception);
         }
@@ -216,6 +225,17 @@ final class SimpleRestCompatibilityController extends FrontendController
     }
 
     /**
+     * The index holds all elements of the config's classes and assets; like Simple REST, only the elements of the
+     * config's workspaces are served.
+     *
+     * @return array<string, mixed>
+     */
+    private function getWorkspaceCondition(ConfigReader $configReader, string $type): array
+    {
+        return WorkspaceQuery::build($configReader->getWorkspace($type));
+    }
+
+    /**
      * @return array{_index: string, _source: array<string, mixed>}|null
      */
     private function findIndexedElement(ConfigReader $configReader, string $config, string $type, int $id): ?array
@@ -227,7 +247,10 @@ final class SimpleRestCompatibilityController extends FrontendController
 
         $result = $this->indexQueryService->search(implode(',', $indices), [
             'size' => 1,
-            'query' => ['term' => ['system.id' => $id]],
+            'query' => ['bool' => ['filter' => [
+                ['term' => ['system.id' => $id]],
+                $this->getWorkspaceCondition($configReader, $type),
+            ]]],
         ]);
 
         return $result['hits']['hits'][0] ?? null;
