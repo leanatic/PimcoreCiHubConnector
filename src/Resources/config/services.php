@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 use CIHub\Bundle\SimpleRESTAdapterBundle\Command\RebuildIndexCommand;
 use CIHub\Bundle\SimpleRESTAdapterBundle\Installer;
+use CIHub\Bundle\SimpleRESTAdapterBundle\Webpack\WebpackEntryPointProvider;
+use Pimcore\Bundle\StudioUiBundle\Webpack\WebpackEntryPointProviderInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
@@ -35,4 +37,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(Installer::class)
         ->public()
         ->arg('$bundle', expr("service('kernel').getBundle('SimpleRESTAdapterBundle')"));
+
+    // Studio plugin (assets/studio), only with Pimcore Studio installed
+    if (interface_exists(WebpackEntryPointProviderInterface::class)) {
+        $services->set(WebpackEntryPointProvider::class)
+            ->tag('pimcore_studio_ui.webpack_entry_point_provider');
+    }
 };

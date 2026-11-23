@@ -38,3 +38,5 @@ Thumbs.db
 /config.json
 /.phpunit*
 **.DS_Store
+# Studio plugin sources (the build in src/Resources/public/studio is committed)
+/assets/studio/node_modules/
