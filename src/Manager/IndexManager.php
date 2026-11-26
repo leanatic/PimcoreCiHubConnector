@@ -79,7 +79,7 @@ final readonly class IndexManager
      */
     public function deleteAllIndices(string $endpointName): void
     {
-        $endpointIndices = sprintf('%s__%s*', $this->indexNamePrefix, $endpointName);
+        $endpointIndices = sprintf('%s__%s*', $this->indexNamePrefix, mb_strtolower($endpointName));
 
         // The search engine may refuse wildcards on delete (action.destructive_requires_name): delete by name
         foreach ($this->indexPersistenceService->getIndexNames($endpointIndices) as $indexName) {
@@ -186,10 +186,11 @@ final readonly class IndexManager
             throw new \InvalidArgumentException(sprintf('The given value must either be a string or a Pimcore element, %s given.', \gettype($value)));
         }
 
+        // Index names must be lowercase, config names need not be (e.g. "ciHub"), as with Simple REST
         return sprintf(
             '%s__%s__%s',
             $this->indexNamePrefix,
-            $endpointName,
+            mb_strtolower($endpointName),
             $indexName
         );
     }
